@@ -1,4 +1,4 @@
-// MOVI Client Form v3 — поля (город/шлагбаум/сборка/компания), телефон +7XXXX..., 2 типа доставки
+// MOVI Client Form v4 — свичи для шлагбаума/сборки/лифта, телефон +7XXXXXXXXXX, город по умолчанию
 (function(){
   const $  = (s,r=document)=>r.querySelector(s);
   const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
@@ -9,8 +9,10 @@
   // Defaults
   const todayISO = () => new Date().toISOString().slice(0,10);
   $('#date').value = todayISO();
+  const city = $('#city');
+  if(!city.value) city.value = 'Калининград';
 
-  // Chips: only мебель / техника
+  // Chips: мебель / техника
   const chipBar = $('.chips');
   const hiddenType = $('#type');
   chipBar?.addEventListener('click',(e)=>{
@@ -22,36 +24,29 @@
     hiddenType.value = b.dataset.type;
   });
 
-  // Phone: always starts with +7; user types only 10 digits after it. No brackets/ dashes.
+  // Phone: +7 + 10 цифр, без скобок/тире, запрет удалять префикс
   const phone = $('#phone');
   function sanitizePhone(){
     let v = phone.value || '';
-    // Ensure prefix +7
-    if(!v.startsWith('+7')){
-      v = '+7' + v.replace(/\D/g,'');
-    }
-    // strip non-digits after +7
+    if(!v.startsWith('+7')) v = '+7' + v.replace(/\D/g,'');
     let rest = v.slice(2).replace(/\D/g,'');
     rest = rest.slice(0,10);
     phone.value = '+7' + rest;
   }
   phone.addEventListener('input', sanitizePhone);
-  phone.addEventListener('focus', () => {
+  phone.addEventListener('focus', ()=>{
     if(!phone.value || !phone.value.startsWith('+7')) phone.value = '+7';
-    // put caret at end
     requestAnimationFrame(()=> phone.setSelectionRange(phone.value.length, phone.value.length));
   });
-  // Prevent deleting the +7 prefix
   phone.addEventListener('keydown', (e)=>{
     const start = phone.selectionStart ?? 0;
     if((e.key === 'Backspace' || e.key === 'Delete') && start <= 2){
       e.preventDefault();
-      // Move caret to end on backspace at prefix
       requestAnimationFrame(()=> phone.setSelectionRange(phone.value.length, phone.value.length));
     }
   });
 
-  // Truck animation (as in v2)
+  // Button animation (same as v3)
   const form  = $('#orderForm');
   const btn   = $('#submitBtn');
   const label = btn.querySelector('.label');
@@ -96,20 +91,17 @@
     e.preventDefault();
     await runSequence();
 
-    // Reset form + defaults
+    // Reset + defaults
     form.reset();
     $('#date').value = todayISO();
     $('#phone').value = '+7';
+    if(!city.value) city.value = 'Калининград';
     hiddenType.value = 'мебель';
     $$('.chip', chipBar).forEach(x=>{
       const on = x.dataset.type === 'мебель';
       x.classList.toggle('active', on);
       x.setAttribute('aria-selected', on ? 'true' : 'false');
     });
-    $('#elevator').checked = false;
-    $('#gate').checked = false;
-    $('#assembly').checked = false;
-
     // scroll top
     try{ window.scrollTo({ top: 0, behavior: 'smooth' }); }catch(e){ window.scrollTo(0,0); }
   }, {passive:false});

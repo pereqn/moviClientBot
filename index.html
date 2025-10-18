@@ -12,7 +12,7 @@
   <div class="app">
     <header class="topbar" aria-label="Шапка">
       <div class="brand">MOVI</div>
-      <div class="title">Создать заявку</div>
+      <div class="title">Создание заявки</div>
       <div class="spacer"></div>
     </header>
 
@@ -26,12 +26,11 @@
         <div class="group">
           <label for="phone">Телефон</label>
           <input id="phone" name="phone" type="tel" inputmode="tel" value="+7" required />
-          <div class="hint">Наберите 10 цифр после +7</div>
         </div>
 
         <div class="group">
           <label for="city">Город</label>
-          <input id="city" name="city" placeholder="Например: Москва" />
+          <input id="city" name="city" value="Калининград" />
         </div>
 
         <div class="grid">
@@ -55,22 +54,29 @@
           </div>
         </div>
 
-        <div class="row row-opts">
-          <label class="checkbox">
-            <input id="gate" type="checkbox" name="gate" />
-            <span class="box"></span><span>Шлагбаум</span>
-          </label>
-
-          <label class="checkbox">
-            <input id="assembly" type="checkbox" name="assembly" />
-            <span class="box"></span><span>Сборка</span>
-          </label>
-
-          <label class="switch" title="Лифт есть">
-            <input id="elevator" type="checkbox" name="elevator" />
-            <span class="slider"></span>
-          </label>
-          <span class="switch-label">Лифт есть</span>
+        <!-- Переключатели: Шлагбаум / Сборка / Лифт -->
+        <div class="row row-switches">
+          <div class="switch-wrap">
+            <label class="switch">
+              <input id="gate" type="checkbox" name="gate" />
+              <span class="slider"></span>
+            </label>
+            <span class="switch-txt">Шлагбаум</span>
+          </div>
+          <div class="switch-wrap">
+            <label class="switch">
+              <input id="assembly" type="checkbox" name="assembly" />
+              <span class="slider"></span>
+            </label>
+            <span class="switch-txt">Сборка</span>
+          </div>
+          <div class="switch-wrap">
+            <label class="switch">
+              <input id="elevator" type="checkbox" name="elevator" />
+              <span class="slider"></span>
+            </label>
+            <span class="switch-txt">Лифт есть</span>
+          </div>
         </div>
 
         <div class="group">
@@ -114,9 +120,7 @@
           <button id="submitBtn" class="order-btn" type="submit" aria-live="polite">
             <span class="label">Создать заявку</span>
             <span class="road"></span>
-            <!-- Коробка -->
             <span class="pkg" aria-hidden="true"></span>
-            <!-- Грузовик -->
             <span class="truck" aria-hidden="true">
               <span class="body"></span>
               <span class="cab"></span>
