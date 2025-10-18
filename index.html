@@ -1,86 +1,193 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="title">MOVI - Заявка на доставку</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>MOVI — Client</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <div class="container">
-        <h1 data-i18n="title">MOVI - Заявка на доставку</h1>
-        
-        <form id="deliveryForm" autocomplete="on">
-            <div class="form-group">
-                <label for="name" data-i18n="nameLabel">ФИО</label>
-                <input type="text" id="name" name="name" required data-i18n-placeholder="namePlaceholder" autocomplete="name" autocapitalize="none" autocorrect="off">
-            </div>
+  <div class="app">
+    <header class="topbar" aria-label="Шапка">
+      <div class="brand">MOVI</div>
+      <div class="title" data-i18n="title.register">Регистрация</div>
+      <div class="spacer"></div>
+    </header>
 
-            <div class="form-group">
-                <label for="phone" data-i18n="phoneLabel">Телефон</label>
-                <input type="tel" id="phone" name="phone" required inputmode="tel" pattern="\+7[0-9]{10}" autocomplete="tel">
-            </div>
+    <main class="content">
+      <!-- VIEW: REGISTER -->
+      <section id="view-register" class="view active" aria-label="Регистрация">
+        <form id="registerForm" class="form" autocomplete="on">
+          <div class="group">
+            <label for="r_name">Имя</label>
+            <input id="r_name" name="name" placeholder="Иван" required />
+          </div>
 
-            <div class="form-group">
-                <label for="address" data-i18n="addressLabel">Адрес</label>
-                <input type="text" id="address" name="address" required data-i18n-placeholder="addressPlaceholder" autocomplete="address-line1" autocapitalize="none" autocorrect="off">
-            </div>
+          <div class="group">
+            <label for="r_phone">Телефон</label>
+            <input id="r_phone" name="phone" type="tel" inputmode="tel" value="+7" required />
+          </div>
 
-            <div class="form-group">
-                <label for="city" data-i18n="cityLabel">Город</label>
-                <input type="text" id="city" name="city" value="Калининград" required autocomplete="address-level2" autocapitalize="sentences">
-            </div>
+          <div class="group">
+            <label for="r_city">Город</label>
+            <input id="r_city" name="city" value="Калининград" />
+          </div>
 
-            <div class="form-group">
-                <label for="deliveryType" data-i18n="deliveryTypeLabel">Тип доставки</label>
-                <select id="deliveryType" name="deliveryType" required autocomplete="off">
-                    <option value="Мебель">Мебель</option>
-                    <option value="Техника">Техника</option>
-                </select>
-            </div>
+          <div class="group">
+            <label for="r_company">Компания (необяз.)</label>
+            <input id="r_company" name="company" placeholder="ООО Пример" />
+          </div>
 
-            <div class="form-group">
-                <label for="date" data-i18n="dateLabel">Дата доставки</label>
-                <input type="date" id="date" name="date" required autocomplete="bday">
-            </div>
-
-            <div class="form-group">
-                <label for="time" data-i18n="timeLabel">Время доставки</label>
-                <input type="time" id="time" name="time" required autocomplete="off">
-            </div>
-
-            <div class="options-group">
-                <h3 data-i18n="optionsTitle">Дополнительные опции</h3>
-                
-                <label class="checkbox-label">
-                    <input type="checkbox" id="barrier" name="barrier" value="1">
-                    <span data-i18n="barrierOption">Нужен пропуск через шлагбаум</span>
-                </label>
-
-                <label class="checkbox-label">
-                    <input type="checkbox" id="assembly" name="assembly" value="1">
-                    <span data-i18n="assemblyOption">Нужна сборка</span>
-                </label>
-
-                <label class="checkbox-label">
-                    <input type="checkbox" id="elevator" name="elevator" value="1">
-                    <span data-i18n="elevatorOption">Нужен лифт/грузовой подъёмник</span>
-                </label>
-            </div>
-
-            <button type="submit" id="submitBtn" class="submit-btn">
-                <span class="btn-text" data-i18n="submitBtn">Отправить заявку</span>
-                <div class="truck-animation">
-                    <div class="truck-box"></div>
-                    <div class="truck-body">
-                        <div class="truck-door left"></div>
-                        <div class="truck-door right"></div>
-                    </div>
-                </div>
+          <div class="btn-wrap">
+            <button id="btnRegister" class="order-btn" type="submit">
+              <span class="label">Зарегистрироваться</span>
+              <span class="road"></span>
+              <span class="pkg" aria-hidden="true"></span>
+              <span class="truck" aria-hidden="true">
+                <span class="body"></span>
+                <span class="cab"></span>
+                <span class="door door-l"></span>
+                <span class="door door-r"></span>
+                <span class="strap strap-l"></span>
+                <span class="strap strap-r"></span>
+                <span class="wheel w1"></span>
+                <span class="wheel w2"></span>
+                <span class="light l1"></span>
+                <span class="light l2"></span>
+              </span>
             </button>
+          </div>
         </form>
-    </div>
+      </section>
 
-    <script src="app.js" defer></script>
+      <!-- VIEW: ORDER FORM -->
+      <section id="view-form" class="view" aria-label="Создание заявки">
+        <form id="orderForm" class="form" autocomplete="on">
+          <div class="group">
+            <label for="name">Имя</label>
+            <input id="name" name="name" placeholder="Иван" required />
+          </div>
+
+          <div class="group">
+            <label for="phone">Телефон</label>
+            <input id="phone" name="phone" type="tel" inputmode="tel" value="+7" required />
+          </div>
+
+          <div class="group">
+            <label for="city">Город</label>
+            <input id="city" name="city" value="Калининград" />
+          </div>
+
+          <div class="grid">
+            <div class="group">
+              <label for="street">Улица</label>
+              <input id="street" name="street" placeholder="Советская ул." required />
+            </div>
+            <div class="row grid-3">
+              <div class="group">
+                <label for="house">Дом</label>
+                <input id="house" name="house" placeholder="12" required />
+              </div>
+              <div class="group">
+                <label for="apt">Кв.</label>
+                <input id="apt" name="apt" placeholder="45" />
+              </div>
+              <div class="group">
+                <label for="floor">Этаж</label>
+                <input id="floor" name="floor" type="number" inputmode="numeric" min="1" placeholder="3" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Переключатели: Шлагбаум / Сборка / Лифт -->
+          <div class="row row-switches">
+            <div class="switch-wrap">
+              <label class="switch">
+                <input id="gate" type="checkbox" name="gate" />
+                <span class="slider"></span>
+              </label>
+              <span class="switch-txt">Шлагбаум</span>
+            </div>
+            <div class="switch-wrap">
+              <label class="switch">
+                <input id="assembly" type="checkbox" name="assembly" />
+                <span class="slider"></span>
+              </label>
+              <span class="switch-txt">Сборка</span>
+            </div>
+            <div class="switch-wrap">
+              <label class="switch">
+                <input id="elevator" type="checkbox" name="elevator" />
+                <span class="slider"></span>
+              </label>
+              <span class="switch-txt">Лифт есть</span>
+            </div>
+          </div>
+
+          <div class="group">
+            <label>Тип доставки</label>
+            <div class="chips" role="tablist" aria-label="Тип доставки">
+              <button class="chip active" data-type="мебель" role="tab" aria-selected="true">Мебель</button>
+              <button class="chip" data-type="техника" role="tab" aria-selected="false">Техника</button>
+            </div>
+            <input type="hidden" name="type" id="type" value="мебель" />
+          </div>
+
+          <div class="row">
+            <div class="group">
+              <label for="date">Дата</label>
+              <input id="date" name="date" type="date" required />
+            </div>
+            <div class="group">
+              <label for="time">Время</label>
+              <input id="time" name="time" type="time" required />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="group">
+              <label for="company">Компания (необяз.)</label>
+              <input id="company" name="company" placeholder="ООО Пример" />
+            </div>
+            <div class="group">
+              <label for="contact">Контактное лицо (необяз.)</label>
+              <input id="contact" name="contact" placeholder="Иван Иванов" />
+            </div>
+          </div>
+
+          <div class="group">
+            <label for="comment">Комментарий</label>
+            <textarea id="comment" name="comment" rows="3" placeholder="Например: во дворе шлагбаум, позвонить за 10 минут, нужна сборка..."></textarea>
+          </div>
+
+          <!-- Кнопка с анимацией -->
+          <div class="btn-wrap">
+            <button id="submitBtn" class="order-btn" type="submit" aria-live="polite">
+              <span class="label">Создать заявку</span>
+              <span class="road"></span>
+              <span class="pkg" aria-hidden="true"></span>
+              <span class="truck" aria-hidden="true">
+                <span class="body"></span>
+                <span class="cab"></span>
+                <span class="door door-l"></span>
+                <span class="door door-r"></span>
+                <span class="strap strap-l"></span>
+                <span class="strap strap-r"></span>
+                <span class="wheel w1"></span>
+                <span class="wheel w2"></span>
+                <span class="light l1"></span>
+                <span class="light l2"></span>
+              </span>
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
