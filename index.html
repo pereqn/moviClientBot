@@ -12,58 +12,46 @@
   <div class="app">
     <header class="topbar" aria-label="Шапка">
       <div class="brand">MOVI</div>
-      <div class="title" data-i18n="title.register">Регистрация</div>
-      <div class="spacer"></div>
+      <div id="topTitle" class="title">Создание заявки</div>
+      <button id="logoutBtn" class="link-btn" type="button" hidden>Выйти</button>
     </header>
 
     <main class="content">
-      <!-- VIEW: REGISTER -->
-      <section id="view-register" class="view active" aria-label="Регистрация">
-        <form id="registerForm" class="form" autocomplete="on">
-          <div class="group">
-            <label for="r_name">Имя</label>
-            <input id="r_name" name="name" placeholder="Иван" required />
-          </div>
+      <!-- AUTH / REGISTRATION SCREEN -->
+      <section id="authScreen" class="screen" aria-label="Регистрация">
+        <div class="card">
+          <h1 class="h1">Регистрация</h1>
+          <p class="muted">Войдите, чтобы оформлять заявки быстрее.</p>
 
-          <div class="group">
-            <label for="r_phone">Телефон</label>
-            <input id="r_phone" name="phone" type="tel" inputmode="tel" value="+7" required />
-          </div>
+          <form id="authForm" class="form" autocomplete="on">
+            <div class="group">
+              <label for="regName">Имя</label>
+              <input id="regName" name="regName" placeholder="Иван" required>
+            </div>
 
-          <div class="group">
-            <label for="r_city">Город</label>
-            <input id="r_city" name="city" value="Калининград" />
-          </div>
+            <div class="group">
+              <label for="regPhone">Телефон</label>
+              <input id="regPhone" name="regPhone" type="tel" inputmode="tel" value="+7" required>
+            </div>
 
-          <div class="group">
-            <label for="r_company">Компания (необяз.)</label>
-            <input id="r_company" name="company" placeholder="ООО Пример" />
-          </div>
+            <div class="group">
+              <label for="regCity">Город</label>
+              <input id="regCity" name="regCity" value="Калининград">
+            </div>
 
-          <div class="btn-wrap">
-            <button id="btnRegister" class="order-btn" type="submit">
-              <span class="label">Зарегистрироваться</span>
-              <span class="road"></span>
-              <span class="pkg" aria-hidden="true"></span>
-              <span class="truck" aria-hidden="true">
-                <span class="body"></span>
-                <span class="cab"></span>
-                <span class="door door-l"></span>
-                <span class="door door-r"></span>
-                <span class="strap strap-l"></span>
-                <span class="strap strap-r"></span>
-                <span class="wheel w1"></span>
-                <span class="wheel w2"></span>
-                <span class="light l1"></span>
-                <span class="light l2"></span>
-              </span>
-            </button>
-          </div>
-        </form>
+            <label class="checkbox tiny">
+              <input id="terms" type="checkbox" required>
+              <span class="box"></span>
+              <span>Согласен с правилами сервиса</span>
+            </label>
+
+            <button class="primary-btn" type="submit">Зарегистрироваться</button>
+          </form>
+        </div>
       </section>
 
-      <!-- VIEW: ORDER FORM -->
-      <section id="view-form" class="view" aria-label="Создание заявки">
+      <!-- ORDER / CREATE REQUEST SCREEN -->
+      <section id="orderScreen" class="screen" aria-label="Создание заявки">
         <form id="orderForm" class="form" autocomplete="on">
           <div class="group">
             <label for="name">Имя</label>
@@ -187,7 +175,6 @@
     </main>
   </div>
 
-  <script src="config.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
