@@ -1,45 +1,114 @@
-// MOVI Client — Auth (localStorage) + Order + Truck Animation
+// MOVI Client v6 — Choice -> Personal/Company registration -> Order form (persisted)
 (function(){
   const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)], wait=(ms)=>new Promise(res=>setTimeout(res,ms));
-  // Telegram MiniApp support (optional)
-  let tgUser=null;try{if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.ready();tgUser=Telegram.WebApp.initDataUnsafe?.user||null}}catch(e){}
-
+  let tgUser=null; try{ if(window.Telegram&&Telegram.WebApp){ Telegram.WebApp.ready(); tgUser=Telegram.WebApp.initDataUnsafe?.user||null; } }catch(e){}
   const STORAGE_KEY='movi:user:v1', todayISO=()=>new Date().toISOString().slice(0,10);
-  const getSaved=()=>{try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'null')}catch(e){return null}};
-  const saveUser=u=>localStorage.setItem(STORAGE_KEY,JSON.stringify(u));
-  const logout=()=>{localStorage.removeItem(STORAGE_KEY);showAuth()};
+  const getSaved=()=>{ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||'null'); }catch(e){ return null; } };
+  const saveUser=u=>localStorage.setItem(STORAGE_KEY, JSON.stringify(u));
+  const clearUser=()=>localStorage.removeItem(STORAGE_KEY);
 
   // Screens
-  const authScreen=$('#authScreen'), orderScreen=$('#orderScreen'), topTitle=$('#topTitle'), logoutBtn=$('#logoutBtn');
+  const choiceScreen = $('#choiceScreen');
+  const authPersonal = $('#authPersonal');
+  const authCompany  = $('#authCompany');
+  const orderScreen  = $('#orderScreen');
+  const topTitle     = $('#topTitle');
+  const logoutBtn    = $('#logoutBtn');
 
-  function showAuth(){authScreen.classList.add('active');orderScreen.classList.remove('active');topTitle.textContent='Регистрация';logoutBtn.hidden=true}
+  function showChoice(){ hideAll(); choiceScreen.classList.add('active'); topTitle.textContent='Регистрация'; logoutBtn.hidden = true; }
+  function showAuthPersonal(){ hideAll(); authPersonal.classList.add('active'); topTitle.textContent='Регистрация'; logoutBtn.hidden = true; }
+  function showAuthCompany(){ hideAll(); authCompany.classList.add('active'); topTitle.textContent='Регистрация компании'; logoutBtn.hidden = true; }
   function showOrder(){
-    authScreen.classList.remove('active');orderScreen.classList.add('active');topTitle.textContent='Создание заявки';logoutBtn.hidden=false;
-    const u=getSaved();
-    $('#name').value=u?.name||''; $('#phone').value=u?.phone||'+7'; $('#city').value=u?.city||'Калининград';
-    $('#date').value=todayISO();
+    hideAll(); orderScreen.classList.add('active'); topTitle.textContent='Создание заявки'; logoutBtn.hidden = false;
+    const u = getSaved() || {};
+    // Prefill generic
+    $('#name').value  = (u.type==='company' ? (u.company?.contact||u.name||'') : (u.name||''));
+    $('#phone').value = u.phone || '+7';
+    $('#city').value  = u.city  || 'Калининград';
+    // If company, prefill company fields too
+    if(u.type==='company'){
+      $('#company').value = u.company?.name || '';
+      $('#contact').value = u.company?.contact || '';
+    }
+    $('#date').value  = todayISO();
+  }
+  function hideAll(){ [choiceScreen, authPersonal, authCompany, orderScreen].forEach(x=>x.classList.remove('active')); }
+
+  // Start
+  const saved = getSaved();
+  if(saved){ showOrder(); } else {
+    if(tgUser){ $('#pName').value = (tgUser.first_name||'') + (tgUser.last_name ? ' '+tgUser.last_name : ''); $('#cContact').value = $('#pName').value; }
+    showChoice();
   }
 
-  const saved=getSaved();
-  if(saved){ showOrder(); }else{ if(tgUser){$('#regName').value=(tgUser.first_name||'')+(tgUser.last_name?' '+tgUser.last_name:'')} showAuth(); }
+  // Choice buttons
+  $('#choosePersonal').addEventListener('click', showAuthPersonal);
+  $('#chooseCompany').addEventListener('click', showAuthCompany);
+  $$('.backChoice').forEach(b=> b.addEventListener('click', showChoice));
 
-  // Auth form
-  const regPhone=$('#regPhone'), authForm=$('#authForm');
-  const sanitizePhone=(inp)=>{let v=inp.value||''; if(!v.startsWith('+7')) v='+7'+v.replace(/\D/g,''); let rest=v.slice(2).replace(/\D/g,'').slice(0,10); inp.value='+7'+rest;};
-  regPhone.addEventListener('input',()=>sanitizePhone(regPhone));
-  regPhone.addEventListener('focus',()=>{if(!regPhone.value.startsWith('+7')) regPhone.value='+7';requestAnimationFrame(()=>regPhone.setSelectionRange(regPhone.value.length,regPhone.value.length))});
-  regPhone.addEventListener('keydown',e=>{const s=regPhone.selectionStart??0;if((e.key==='Backspace'||e.key==='Delete')&&s<=2){e.preventDefault();requestAnimationFrame(()=>regPhone.setSelectionRange(regPhone.value.length,regPhone.value.length))}});
-  authForm.addEventListener('submit',e=>{
+  // Phone sanitizers (+7 + 10 digits)
+  function attachPhoneSanitizer(input){
+    input.addEventListener('input', ()=>{
+      let v = input.value || '';
+      if(!v.startsWith('+7')) v = '+7' + v.replace(/\D/g,'');
+      let rest = v.slice(2).replace(/\D/g,'').slice(0,10);
+      input.value = '+7' + rest;
+    });
+    input.addEventListener('focus', ()=>{
+      if(!input.value.startsWith('+7')) input.value = '+7';
+      requestAnimationFrame(()=> input.setSelectionRange(input.value.length, input.value.length));
+    });
+    input.addEventListener('keydown', (e)=>{
+      const start = input.selectionStart ?? 0;
+      if((e.key==='Backspace' || e.key==='Delete') && start <= 2){
+        e.preventDefault();
+        requestAnimationFrame(()=> input.setSelectionRange(input.value.length, input.value.length));
+      }
+    });
+  }
+  attachPhoneSanitizer($('#pPhone'));
+  attachPhoneSanitizer($('#cPhone'));
+
+  // Logout
+  logoutBtn.addEventListener('click', ()=>{ clearUser(); showChoice(); });
+
+  // Register Personal
+  $('#authFormPersonal').addEventListener('submit', (e)=>{
     e.preventDefault();
-    const user={ uid:tgUser?.id||null, name:$('#regName').value.trim(), phone:$('#regPhone').value.trim(), city:$('#regCity').value.trim()||'Калининград',
-      tg:tgUser?{id:tgUser.id,username:tgUser.username||null,first_name:tgUser.first_name||null,last_name:tgUser.last_name||null}:null, ts:Date.now() };
+    const user = {
+      uid: tgUser?.id || null,
+      type: 'personal',
+      name:  $('#pName').value.trim(),
+      phone: $('#pPhone').value.trim(),
+      city:  $('#pCity').value.trim() || 'Калининград',
+      tg: tgUser ? { id: tgUser.id, username: tgUser.username||null, first_name: tgUser.first_name||null, last_name: tgUser.last_name||null } : null,
+      ts: Date.now()
+    };
     if(!/^\+7\d{10}$/.test(user.phone)) return alert('Введите телефон в формате +7XXXXXXXXXX');
     if(!user.name) return alert('Введите имя');
     saveUser(user); showOrder();
   }, {passive:false});
-  logoutBtn.addEventListener('click',logout);
 
-  // Order: chips
+  // Register Company
+  $('#authFormCompany').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const user = {
+      uid: tgUser?.id || null,
+      type: 'company',
+      name:  $('#cContact').value.trim(), // будем использовать в поле Имя по умолчанию
+      phone: $('#cPhone').value.trim(),
+      city:  $('#cCity').value.trim() || 'Калининград',
+      company: { name: $('#cCompany').value.trim(), contact: $('#cContact').value.trim() },
+      tg: tgUser ? { id: tgUser.id, username: tgUser.username||null, first_name: tgUser.first_name||null, last_name: tgUser.last_name||null } : null,
+      ts: Date.now()
+    };
+    if(!/^\+7\d{10}$/.test(user.phone)) return alert('Введите телефон в формате +7XXXXXXXXXX');
+    if(!user.company.name) return alert('Введите название компании');
+    if(!user.company.contact) return alert('Введите контактное лицо');
+    saveUser(user); showOrder();
+  }, {passive:false});
+
+  // ===== Order screen logic (same animation as before) =====
   const chipBar=$('.chips'), hiddenType=$('#type');
   chipBar?.addEventListener('click',e=>{
     const b=e.target.closest('.chip'); if(!b) return;
@@ -47,14 +116,9 @@
     hiddenType.value=b.dataset.type;
   });
 
-  // Order: phone (+7 + 10 digits, no masks)
   const phone=$('#phone');
-  const sanitizeOrderPhone=()=>{let v=phone.value||'';if(!v.startsWith('+7')) v='+7'+v.replace(/\D/g,''); let rest=v.slice(2).replace(/\D/g,'').slice(0,10); phone.value='+7'+rest;};
-  phone.addEventListener('input',sanitizeOrderPhone);
-  phone.addEventListener('focus',()=>{if(!phone.value.startsWith('+7')) phone.value='+7';requestAnimationFrame(()=>phone.setSelectionRange(phone.value.length,phone.value.length))});
-  phone.addEventListener('keydown',e=>{const s=phone.selectionStart??0;if((e.key==='Backspace'||e.key==='Delete')&&s<=2){e.preventDefault();requestAnimationFrame(()=>phone.setSelectionRange(phone.value.length,phone.value.length))}});
+  attachPhoneSanitizer(phone);
 
-  // Truck button animation + reset + scroll
   const form=$('#orderForm'), btn=$('#submitBtn'), label=btn.querySelector('.label');
   async function runSeq(){
     if(btn.classList.contains('running')) return;
@@ -74,14 +138,15 @@
   form.addEventListener('submit', async e=>{
     e.preventDefault();
     await runSeq();
-    const saved=getSaved();
+    const u=getSaved()||{};
     form.reset();
     $('#date').value=todayISO();
-    $('#phone').value=saved?.phone||'+7';
-    $('#name').value=saved?.name||'';
-    $('#city').value=saved?.city||'Калининград';
+    $('#name').value = (u.type==='company' ? (u.company?.contact||u.name||'') : (u.name||''));
+    $('#phone').value=u.phone||'+7';
+    $('#city').value=u.city||'Калининград';
+    if(u.type==='company'){ $('#company').value=u.company?.name||''; $('#contact').value=u.company?.contact||''; }
     $('#type').value='мебель';
     $$('.chip', chipBar).forEach(x=>{ const on=x.dataset.type==='мебель'; x.classList.toggle('active',on); x.setAttribute('aria-selected',on?'true':'false'); });
-    try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(e){ window.scrollTo(0,0); }
+    try{ window.scrollTo({top:0,behavior:'smooth'}) }catch(e){ window.scrollTo(0,0) }
   }, {passive:false});
 })();

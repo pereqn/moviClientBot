@@ -17,35 +17,68 @@
     </header>
 
     <main class="content">
-      <!-- AUTH / REGISTRATION SCREEN -->
-      <section id="authScreen" class="screen" aria-label="Регистрация">
+      <!-- CHOICE SCREEN -->
+      <section id="choiceScreen" class="screen" aria-label="Выбор типа аккаунта">
+        <div class="card">
+          <h1 class="h1">Кто вы?</h1>
+          <p class="muted">Выберите тип аккаунта для регистрации.</p>
+          <div class="choice-grid">
+            <button id="choosePersonal" class="primary-btn">Частное лицо</button>
+            <button id="chooseCompany" class="secondary-btn">Компания</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PERSONAL REGISTRATION -->
+      <section id="authPersonal" class="screen" aria-label="Регистрация частного лица">
         <div class="card">
           <h1 class="h1">Регистрация</h1>
-          <p class="muted">Войдите, чтобы оформлять заявки быстрее.</p>
-
-          <form id="authForm" class="form" autocomplete="on">
+          <form id="authFormPersonal" class="form" autocomplete="on">
             <div class="group">
-              <label for="regName">Имя</label>
-              <input id="regName" name="regName" placeholder="Иван" required>
+              <label for="pName">Имя</label>
+              <input id="pName" name="pName" placeholder="Иван" required>
             </div>
-
             <div class="group">
-              <label for="regPhone">Телефон</label>
-              <input id="regPhone" name="regPhone" type="tel" inputmode="tel" value="+7" required>
+              <label for="pPhone">Телефон</label>
+              <input id="pPhone" name="pPhone" type="tel" inputmode="tel" value="+7" required>
             </div>
-
             <div class="group">
-              <label for="regCity">Город</label>
-              <input id="regCity" name="regCity" value="Калининград">
+              <label for="pCity">Город</label>
+              <input id="pCity" name="pCity" value="Калининград">
             </div>
+            <div class="row btns">
+              <button type="button" class="ghost-btn backChoice">Назад</button>
+              <button class="primary-btn" type="submit">Зарегистрироваться</button>
+            </div>
+          </form>
+        </div>
+      </section>
 
-            <label class="checkbox tiny">
-              <input id="terms" type="checkbox" required>
-              <span class="box"></span>
-              <span>Согласен с правилами сервиса</span>
-            </label>
-
-            <button class="primary-btn" type="submit">Зарегистрироваться</button>
+      <!-- COMPANY REGISTRATION -->
+      <section id="authCompany" class="screen" aria-label="Регистрация компании">
+        <div class="card">
+          <h1 class="h1">Регистрация компании</h1>
+          <form id="authFormCompany" class="form" autocomplete="on">
+            <div class="group">
+              <label for="cCompany">Название компании</label>
+              <input id="cCompany" name="cCompany" placeholder="ООО Пример" required>
+            </div>
+            <div class="group">
+              <label for="cContact">Контактное лицо</label>
+              <input id="cContact" name="cContact" placeholder="Иван Иванов" required>
+            </div>
+            <div class="group">
+              <label for="cPhone">Телефон</label>
+              <input id="cPhone" name="cPhone" type="tel" inputmode="tel" value="+7" required>
+            </div>
+            <div class="group">
+              <label for="cCity">Город</label>
+              <input id="cCity" name="cCity" value="Калининград">
+            </div>
+            <div class="row btns">
+              <button type="button" class="ghost-btn backChoice">Назад</button>
+              <button class="primary-btn" type="submit">Зарегистрироваться</button>
+            </div>
           </form>
         </div>
       </section>
