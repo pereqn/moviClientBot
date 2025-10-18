@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>MOVI — Client Form</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar" aria-label="Шапка">
+      <div class="brand">MOVI</div>
+      <div class="title">Создать заявку</div>
+      <div class="spacer"></div>
+    </header>
+
+    <main class="content">
+      <form id="orderForm" class="form" autocomplete="on">
+        <div class="group">
+          <label for="name">Имя</label>
+          <input id="name" name="name" placeholder="Иван" required>
+        </div>
+
+        <div class="group">
+          <label for="phone">Телефон</label>
+          <input id="phone" name="phone" type="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" required>
+        </div>
+
+        <div class="grid">
+          <div class="group">
+            <label for="street">Улица</label>
+            <input id="street" name="street" placeholder="Советская ул." required>
+          </div>
+          <div class="row grid-3">
+            <div class="group">
+              <label for="house">Дом</label>
+              <input id="house" name="house" placeholder="12" required>
+            </div>
+            <div class="group">
+              <label for="apt">Кв.</label>
+              <input id="apt" name="apt" placeholder="45">
+            </div>
+            <div class="group">
+              <label for="floor">Этаж</label>
+              <input id="floor" name="floor" type="number" inputmode="numeric" min="1" placeholder="3">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="switch">
+            <input id="elevator" type="checkbox" name="elevator">
+            <span class="slider"></span>
+          </label>
+          <span class="switch-label">Лифт есть</span>
+        </div>
+
+        <div class="group">
+          <label>Тип доставки</label>
+          <div class="chips" role="tablist" aria-label="Тип доставки">
+            <button class="chip active" data-type="мебель" role="tab" aria-selected="true">Мебель</button>
+            <button class="chip" data-type="техника" role="tab" aria-selected="false">Техника</button>
+            <button class="chip" data-type="прочее" role="tab" aria-selected="false">Прочее</button>
+          </div>
+          <input type="hidden" name="type" id="type" value="мебель">
+        </div>
+
+        <div class="row">
+          <div class="group">
+            <label for="date">Дата</label>
+            <input id="date" name="date" type="date" required>
+          </div>
+          <div class="group">
+            <label for="time">Время</label>
+            <input id="time" name="time" type="time" required>
+          </div>
+        </div>
+
+        <div class="group">
+          <label for="comment">Комментарий</label>
+          <textarea id="comment" name="comment" rows="3" placeholder="Например: шлагбаум, сборка, пожелания"></textarea>
+        </div>
+
+        <!-- Animated truck button -->
+        <div class="btn-wrap">
+          <button id="submitBtn" class="order-btn" type="submit" aria-live="polite">
+            <span class="label">Создать заявку</span>
+            <span class="road"></span>
+            <span class="truck" aria-hidden="true">
+              <span class="body"></span>
+              <span class="cab"></span>
+              <span class="wheel w1"></span>
+              <span class="wheel w2"></span>
+              <span class="light l1"></span>
+              <span class="light l2"></span>
+            </span>
+            <span class="check" aria-hidden="true">✓</span>
+          </button>
+        </div>
+      </form>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
