@@ -185,22 +185,24 @@
 
           <!-- Кнопка с анимацией -->
           <div class="btn-wrap">
-            <button id="submitBtn" class="order-btn" type="submit" aria-live="polite">
-              <span class="label">Создать заявку</span>
-              <span class="road"></span>
-              <span class="pkg" aria-hidden="true"></span>
-              <span class="truck" aria-hidden="true">
-                <span class="body"></span>
-                <span class="cab"></span>
-                <span class="door door-l"></span>
-                <span class="door door-r"></span>
-                <span class="strap strap-l"></span>
-                <span class="strap strap-r"></span>
-                <span class="wheel w1"></span>
-                <span class="wheel w2"></span>
-                <span class="light l1"></span>
-                <span class="light l2"></span>
-              </span>
+  <button id="submitBtn" class="order-btn" type="submit" aria-live="polite">
+    <span class="button-text">Создать заявку</span>
+    <div class="animation-container">
+      <div class="road"></div>
+      <div class="truck">
+        <div class="truck-body">
+          <div class="door left"></div>
+          <div class="door right"></div>
+        </div>
+        <div class="truck-front"></div>
+        <div class="truck-cabin"></div>
+        <div class="truck-window"></div>
+        <div class="wheel back"></div>
+        <div class="wheel front"></div>
+      </div>
+      <div class="box"></div>
+    </div>
+    <div class="success-text">Заявка отправлена!</div>
             </button>
           </div>
         </form>
